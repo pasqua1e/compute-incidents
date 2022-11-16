@@ -3,9 +3,9 @@
 
 #user="" -- this is the access key generated in Prisma Cloud
 #pass="" -- Secret key in Prisma Cloud
-compute_url="https://europe-west3.cloud.twistlock.com/eu-2-143543850"
+compute_url=""
 #remember that compute_url is the value found in Compute->System->Tools "path to console"
-#so it's in the form https://europe-west3.cloud.twistlock.com/eu-2-12345678
+#so it's in the form https://xx.cloud.twistlock.com/xxxx
 
 
 
