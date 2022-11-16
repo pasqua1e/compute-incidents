@@ -27,15 +27,13 @@ then
     usage
     exit 1
 fi
-echo "OK"
-exit 0
+
 delete_incidents () {
     curl -k -X PATCH -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents/acknowledge/$1?project=Central+Console" --data-raw '{"acknowledged":true}'
-    #echo "$compute_url/api/v1/audits/incidents/acknowledge/$1?project=Central+Console"
 }
 incidents=`curl -k -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents?acknowledged=false" |jq '.[] | ."_id"'`
 #remove the double quotes from the output
 incidents=`echo $incidents |sed s/\"//g`
-#echo $incidents
+
 
 for i in $incidents; do delete_incidents $i;done
