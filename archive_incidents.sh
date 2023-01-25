@@ -28,12 +28,25 @@ then
     exit 1
 fi
 
-delete_incidents () {
-    curl -k -X PATCH -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents/acknowledge/$1?project=Central+Console" --data-raw '{"acknowledged":true}'
+archive_incidents () {
+    incidents=`curl -k -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents?acknowledged=false&limit=50&offset=0"`
+    if [ "$incidents" == "null" ]
+    then
+      echo "all done, exiting...">/dev/tty
+      return 1
+    fi
+    ids=`echo $incidents|jq '.[] | ."_id"'|sed s/\"//g`
+    for i in $ids
+    do
+      curl -k -X PATCH -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents/acknowledge/$i?project=Central+Console" --data-raw '{"acknowledged":true}'
+      :
+    done
+    return 0
 }
-incidents=`curl -k -H "$accept" -u "$user:$pass" "$compute_url/api/v1/audits/incidents?acknowledged=false" |jq '.[] | ."_id"'`
-#remove the double quotes from the output
-incidents=`echo $incidents |sed s/\"//g`
 
-
-for i in $incidents; do delete_incidents $i;done
+status=0
+while [ "$status" -eq "0" ]
+do
+  archive_incidents
+  status=$?
+done
