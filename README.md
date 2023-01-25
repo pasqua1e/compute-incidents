@@ -14,3 +14,5 @@ user and pass are the access/secret keys that can be created on Prisma Cloud und
 Settings->Access Control->Access Keys->Add
 
 While compute_url is the "path to console" 
+
+Additionally, jq is also required to be installed
